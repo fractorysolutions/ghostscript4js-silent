@@ -1,7 +1,7 @@
 {
-  "name": "ghostscript4js",
-  "description": "Bindings for the Ghostscript C API to the Node.JS world.",
-  "version": "3.2.1",
+  "name": "ghostscript4js-silent",
+  "description": "Silent bindings for the Ghostscript C API to the Node.JS world.",
+  "version": "3.2.2",
   "contributors": [
     {
       "name": "Nicola Del Gobbo",
@@ -23,11 +23,11 @@
       "name": "Loren Yu",
       "email": "loren@navapbc.com"
     },
+    "Samuel Bronson (https://github.com/SamB)",
     {
       "name": "Rao Zvorovski",
       "email": "rao@fractory.com"
-    },
-    "Samuel Bronson (https://github.com/SamB)"
+    }
   ],
   "keywords": [
     "ghostscript",

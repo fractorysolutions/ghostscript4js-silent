@@ -23,6 +23,7 @@
 class GhostscriptManager
 {
   private:
+	int save_out;
     void *minst;
     mutex gs;
     static GhostscriptManager *instance;
@@ -60,8 +61,14 @@ GhostscriptManager *GhostscriptManager::GetInstance()
 // i.e. Do not call init more than once, otherwise an error will be returned.
 void GhostscriptManager::Init()
 {
-    int code = 0;
-    code = gsapi_new_instance(&minst, NULL);
+    int dev_null = open("/dev/null", O_WRONLY);
+    if(dev_null < 0) {
+        perror("Failed to open /dev/null");
+    } else {
+        save_out = dup(1);
+        dup2(dev_null, 1); //stdout
+    }
+    int code = gsapi_new_instance(&minst, NULL);
     if (code < 0)
     {
         throw std::runtime_error("Sorry error happened creating Ghostscript instance. Error code: " + to_string(code));
@@ -77,13 +84,6 @@ void GhostscriptManager::Init()
 // It initialises the Ghostscript interpreter given a set of arguments.
 void GhostscriptManager::Execute(int gsargc, char *gsargv[])
 {
-    int dev_null = open("/dev/null", O_WRONLY);
-    if(dev_null < 0) {
-        perror("Failed to open /dev/null");
-    } else {
-        dup2(dev_null, 1); //stdout
-        dup2(dev_null, 2); //stderr
-    }
     lock_guard<mutex> lk(gs);
     Init();
     int code = 0;
@@ -108,6 +108,7 @@ void GhostscriptManager::Exit()
     {
         throw std::runtime_error("Sorry error happened during the exit from the Ghostscript interpreter. Error code: " + to_string(code));
     }
+    dup2(save_out, 1);
 }
 
 // Destroy is an implementation of gsapi_delete_instance.
@@ -123,7 +124,8 @@ class GhostscriptWorker : public Napi::AsyncWorker
 {
   public:
     GhostscriptWorker(Napi::Function& callback, vector<string> explodedCmd)
-        : Napi::AsyncWorker(callback, "ghostcript4js"), explodedCmd(explodedCmd) {}
+        : Napi::AsyncWorker(callback, "ghostcript4js"), explodedCmd(explodedCmd) {
+	}
     ~GhostscriptWorker() {}
 
     void Execute()
