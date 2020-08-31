@@ -37,6 +37,11 @@
 #include <napi.h>
 
 #include "iapi.h"
+#include <unistd.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 
 #define gs_error_Quit -101
 

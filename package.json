@@ -23,6 +23,10 @@
       "name": "Loren Yu",
       "email": "loren@navapbc.com"
     },
+    {
+      "name": "Rao Zvorovski",
+      "email": "rao@fractory.com"
+    },
     "Samuel Bronson (https://github.com/SamB)"
   ],
   "keywords": [
@@ -31,7 +35,8 @@
     "native",
     "pdf",
     "ps",
-    "eps"
+    "eps",
+    "quiet"
   ],
   "license": "Apache-2.0",
   "scripts": {

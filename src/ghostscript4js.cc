@@ -77,6 +77,13 @@ void GhostscriptManager::Init()
 // It initialises the Ghostscript interpreter given a set of arguments.
 void GhostscriptManager::Execute(int gsargc, char *gsargv[])
 {
+    int dev_null = open("/dev/null", O_WRONLY);
+    if(dev_null < 0) {
+        perror("Failed to open /dev/null");
+    } else {
+        dup2(dev_null, 1); //stdout
+        dup2(dev_null, 2); //stderr
+    }
     lock_guard<mutex> lk(gs);
     Init();
     int code = 0;
